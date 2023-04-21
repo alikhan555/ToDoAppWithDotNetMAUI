@@ -10,11 +10,14 @@ namespace ToDo.Models
     public partial class TaskModel : ObservableObject
     {
         [ObservableProperty]
-
         public int id;
+        
         [ObservableProperty]
+        public Guid guid;
 
+        [ObservableProperty]
         public string name;
+        
         [ObservableProperty]
         public string description;
     }

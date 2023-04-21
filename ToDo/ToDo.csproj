@@ -25,8 +25,8 @@
 		<AndroidKeyStore>True</AndroidKeyStore>
 		<AndroidSigningKeyStore>ToDo.keystore</AndroidSigningKeyStore>
 		<AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
-		<AndroidSigningKeyPass></AndroidSigningKeyPass>
-		<AndroidSigningStorePass></AndroidSigningStorePass>
+		<AndroidSigningKeyPass>m.alikhan555</AndroidSigningKeyPass>
+		<AndroidSigningStorePass>m.alikhan555</AndroidSigningStorePass>
 		
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
@@ -57,6 +57,10 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.4" />
+		
+		
 	</ItemGroup>
 
 	<ItemGroup>

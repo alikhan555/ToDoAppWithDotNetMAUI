@@ -6,56 +6,93 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToDo.DAL;
 using ToDo.Models;
 
 namespace ToDo.ViewModel
 {
     public partial class MainPageViewModel : ObservableObject
     {
-        public MainPageViewModel()
-        {
-            TaskModels = new ObservableCollection<TaskModel>();
-        }
-
         [ObservableProperty]
         string taskName;
 
         [ObservableProperty]
         ObservableCollection<TaskModel> taskModels;
 
+        private readonly TaskToDoRepository _taskToDoRepository;
+        private readonly Task loadingTask;
+
+        public MainPageViewModel(TaskToDoRepository taskToDoRepository)
+        {
+            _taskToDoRepository = taskToDoRepository;
+            loadingTask = Load();
+        }
+
         [RelayCommand]
-        public void AddTask()
+        public async Task AddTask()
         {
             if (string.IsNullOrEmpty(TaskName))
                 return;
 
-            if (TaskModels.Any(task => task.Name == TaskName))
-                return;
+            TaskToDo taskToDo = new TaskToDo()
+            {
+                guid = Guid.NewGuid(),
+                TaskName = TaskName,
+                TaskDescription = $"{TaskName} description"
+            };
 
-            TaskModels.Add(new TaskModel() { Id = new Random().Next(), Name = TaskName, Description = $"{TaskName} description" });
+            int status = await _taskToDoRepository.SaveTaskToDo(taskToDo);
+
+            if (status > 0)
+                await Load();
 
             TaskName = string.Empty;
         }
 
         [RelayCommand]
-        public void RemoveTask(string taskName)
+        public async Task RemoveTask(Guid guid)
         {
-            TaskModel task = TaskModels.SingleOrDefault(task => task.Name == taskName);
+            TaskToDo task = await _taskToDoRepository.SingleOrDefault(guid);
 
-            if (task != null)
+            if (task is null)
             {
-                TaskModels.Remove(task);
+                await Shell.Current.DisplayAlert("Warning", "This task is not available.", "Okay");
+                return;
+            }
+            else
+            {
+                await _taskToDoRepository.RemoveTaskToDo(task);
+                await Load();
             }
         }
 
         [RelayCommand]
-        public async Task ShowDetails(string taskName)
+        public async Task ShowDetails(Guid guid)
         {
-            TaskModel task = TaskModels.SingleOrDefault(task => task.Name == taskName);
+            TaskToDo task = await _taskToDoRepository.SingleOrDefault(guid);
+
+            TaskModel taskModel = new TaskModel() { Id = task.Id, Guid = task.guid, Name = task.TaskName, Description = task.TaskDescription };
 
             if (task != null)
             {
-                await Shell.Current.GoToAsync(nameof(DetailPage), new Dictionary<string, object>() { { "TaskData", task } });
+                await Shell.Current.GoToAsync(nameof(DetailPage), new Dictionary<string, object>() { { "TaskData", taskModel } });
+            }
+        }
+
+        public async Task Load()
+        {
+            List<TaskToDo> tasksTodos = await _taskToDoRepository.GetTaskToDos();
+
+            TaskModels = null;
+
+            if (TaskModels is null) 
+                TaskModels = new ObservableCollection<TaskModel>();
+            else 
+                TaskModels.Clear();
+
+            foreach (TaskToDo taskToDo in tasksTodos)
+            {
+                TaskModels.Add(new TaskModel() { Id = taskToDo.Id, Guid = taskToDo.guid, Description= taskToDo.TaskDescription, Name = taskToDo.TaskName });
             }
         }
     }

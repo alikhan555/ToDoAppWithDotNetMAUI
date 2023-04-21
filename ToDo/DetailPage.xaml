@@ -12,6 +12,10 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
         <Label 
+            Text="{Binding Task.Guid}"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Label 
             Text="{Binding Task.Name}"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />

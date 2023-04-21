@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using ToDo.DAL;
 using ToDo.ViewModel;
 
 namespace ToDo;
@@ -21,6 +22,8 @@ public static class MauiProgram
 
         builder.Services.AddTransient<DetailPage>();
         builder.Services.AddTransient<DetailPageViewModel>();
+
+		builder.Services.AddSingleton<TaskToDoRepository>();
 
 #if DEBUG
         builder.Logging.AddDebug();
