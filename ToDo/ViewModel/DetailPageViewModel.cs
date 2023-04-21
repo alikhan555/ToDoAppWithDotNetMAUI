@@ -9,9 +9,13 @@ using ToDo.Models;
 
 namespace ToDo.ViewModel
 {
-    [QueryProperty("Task", "TaskData")]
+    [QueryProperty("TaskGuid", "TaskGuid")]
+    [QueryProperty("Task", "TaskModel")]
     public partial class DetailPageViewModel : ObservableObject
     {
+        [ObservableProperty]
+        Guid taskGuid;
+
         [ObservableProperty]
         TaskModel task;
 

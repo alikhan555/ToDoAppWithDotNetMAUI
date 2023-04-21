@@ -75,7 +75,7 @@ namespace ToDo.ViewModel
 
             if (task != null)
             {
-                await Shell.Current.GoToAsync(nameof(DetailPage), new Dictionary<string, object>() { { "TaskData", taskModel } });
+                await Shell.Current.GoToAsync($"{nameof(DetailPage)}", new Dictionary<string, object>() { { "TaskGuid", guid }, { "TaskModel", taskModel } });
             }
         }
 
